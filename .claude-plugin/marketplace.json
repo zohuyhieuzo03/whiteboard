@@ -5,7 +5,7 @@
     {
       "name": "whiteboard",
       "source": "./packages/agent-plugins/claude",
-      "description": "Connect Claude Code to dev.fast Whiteboard"
+      "description": "Connect Claude Code or Copilot CLI to dev.fast Whiteboard"
     }
   ]
 }

@@ -55,6 +55,21 @@ describe("Whiteboard CLI", () => {
     });
   });
 
+  it("routes the Copilot CLI prompt", async () => {
+    const { code, stdout, stderr } = await runConnect(
+      ["connect", "copilot", "--json"],
+      installTestShim,
+    );
+
+    expect(code).toBe(0);
+    expect(stderr).toBe("");
+    const result = JSON.parse(stdout);
+    expect(Object.keys(result.prompts)).toEqual(["copilot"]);
+    expect(result.prompts.copilot).toContain(
+      "copilot plugin install whiteboard@devfast",
+    );
+  });
+
   it("prints only scanner-owned cleanup paths", async () => {
     let owned = "";
     let plugin = "";

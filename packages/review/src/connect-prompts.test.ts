@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   CLAUDE_WINDOWS_MCP_ADD,
+  COPILOT_WINDOWS_MCP_ADD,
   REVIEW_MCP_LAUNCH,
   WINDOWS_MCP_LAUNCH,
   connectPrompt,
@@ -70,6 +71,27 @@ describe("connectPrompt", () => {
     expect(prompt).toContain("omp install npm:@dev.fast/pi-whiteboard");
     expect(prompt).toContain("/reload-plugins");
     expect(prompt).toContain("whiteboard api session_get_instructions '{}'");
+  });
+
+  it("registers Copilot CLI's MCP server directly on Windows instead of the plugin", () => {
+    const prompt = connectPrompt("copilot", { ...input, platform: "win32" });
+
+    expect(prompt).toContain(COPILOT_WINDOWS_MCP_ADD);
+    expect(prompt).not.toContain("copilot plugin install");
+    expect(
+      connectPrompt("copilot", { ...input, platform: "darwin" }),
+    ).toContain("copilot plugin install whiteboard@devfast");
+  });
+
+  it("installs the Claude plugin from the devfast marketplace in Copilot CLI", () => {
+    const prompt = connectPrompt("copilot", input);
+
+    expect(prompt).toContain(
+      "copilot plugin marketplace add devdotfast/whiteboard",
+    );
+    expect(prompt).toContain("copilot plugin install whiteboard@devfast");
+    expect(prompt).toContain("copilot mcp remove whiteboard");
+    expect(prompt).toContain("session_get_instructions");
   });
 });
 
